@@ -1,0 +1,4 @@
+MyQR==2.3.1
+requests==2.33.1
+Eel==0.18.2
+opencv-python==5.0.0.93

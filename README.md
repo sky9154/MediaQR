@@ -1,93 +1,95 @@
-# QR Code Generator
+# MediaQR
 
-Generate QR codes with custom background images using Python and MyQR.
+![MediaQR](./docs/images/readme-banner.webp)
 
-## About
+MediaQR is a Python desktop utility for creating colorized QR codes with local or remote static images and animated GIFs as backgrounds. It uses MyQR for QR code generation, Eel for the HTML-based interface, Requests to download remote media, and OpenCV to preview static output.
 
-QR Code Generator is a Python application for creating QR codes with image backgrounds.
-
-The application accepts either a local image path or an online image URL as the background source. It uses MyQR to generate the QR code, Eel for the graphical interface, requests to retrieve remote images, and OpenCV to preview generated static images.
-
-Animated GIF backgrounds are also supported. When the output file is a GIF, the generated result is saved without opening an OpenCV preview window.
+![MediaQR demonstration](./docs/images/qr-code-generator-demo.gif)
 
 ## Features
 
-- Generate QR codes with custom background images
-- Use local images as QR code backgrounds
-- Download and use background images from HTTP or HTTPS URLs
-- Support animated GIF backgrounds
-- Generate colorized QR codes with MyQR
-- Preview generated non-GIF images with OpenCV
-- Use a graphical interface built with Eel
+- Encodes a URL in a colorized QR code
+- Accepts local image paths and HTTP(S) image URLs
+- Supports static images and animated GIF backgrounds
+- Saves the result with a user-defined file name
+- Opens static output in an OpenCV preview window and animated GIF output in the default Windows app
+- Runs an HTML, CSS, and JavaScript interface through Eel
 
-## Getting Started
+## Requirements
 
-### Prerequisites
+- Python 3.12 (tested with Python 3.12.13)
+- Python packages listed in `requirements.txt`
 
-To run the application, you need:
+The tested dependency versions are pinned in `requirements.txt`:
 
-- Python 3
-- pip
+- MyQR 2.3.1
+- Requests 2.33.1
+- Eel 0.18.2
+- OpenCV Python 5.0.0.93
 
-The project uses the following Python packages:
+## Setup
 
-- `myqr`
-- `requests`
-- `eel`
-- `opencv-python`
-
-### Installation
-
-**1. Clone the repository**
+Install the required packages from the repository root:
 
 ```bash
-git clone https://github.com/sky9154/QRcode.git
-cd QRcode
+python -m pip install -r requirements.txt
 ```
 
-**2. Install the required packages**
+## Run the application
+
+Run the command from the repository root:
 
 ```bash
-pip install myqr
-pip install requests
-pip install eel
-pip install opencv-python
+python build.py
 ```
 
-### Usage
+The interface opens in a `600 x 400` Microsoft Edge window at local port `8763`.
 
-Run the application with:
+## Usage
 
-```bash
-python3 build.py
-```
+1. Enter the URL to encode.
 
-In the interface:
+   ![Entering the QR code URL](./docs/images/qr-code-link.webp)
 
-1. Enter the content or URL to encode in the QR code.
-2. Enter the path or URL of the background image.
-3. Enter the output file name.
-4. Click **Build** to generate the QR code.
+2. Enter a local image path or an HTTP(S) image URL.
 
-For animated GIF backgrounds, use `.gif` as the output file extension.
+   ![Entering the background image source](./docs/images/background-image-source.webp)
 
-GIF output is saved without an OpenCV preview. Other generated image files are opened in a preview window after creation.
+3. Enter the output file name. When the background is an animated GIF, use a `.gif` output extension.
 
-## Project Structure
+   ![Entering the output file name](./docs/images/output-file-name.webp)
+
+4. Select **Build** to generate the QR code.
+
+   ![Generated QR code with an animated background](./docs/images/generated-qr-code.gif)
+
+Static output opens in an OpenCV preview window. Animated GIF output opens in the default Windows app so the animation can be displayed.
+
+## How it works
+
+The browser interface calls the exposed Python function `buildQRcode()` through Eel. Remote images are downloaded with Requests and stored as `picData.webp` or `picData.gif` in the repository root.
+
+The image is then passed to `myqr.run()` with color output enabled and the QR version fixed at `20`. The generated file uses the name entered in the interface. Static output is displayed with OpenCV, while animated GIF output is opened with its default Windows app.
+
+## Repository structure
 
 ```text
-QRcode/
-├── assets/
-│   └── images/
+MediaQR/
 ├── gui/
+│   ├── css/
+│   │   └── style.css
+│   ├── images/
+│   │   └── logo.svg
+│   ├── js/
+│   │   └── func.js
+│   └── index.html
 ├── build.py
-└── README.md
+└── requirements.txt
 ```
 
-- `build.py` contains the QR code generation logic and starts the Eel interface.
-- `gui/` contains the files used by the Eel graphical interface.
-- `assets/images/` contains image assets used by the project.
+## Known limitations
 
-## Screenshots
-
-![Demo](/assets/images/demo.gif)
+- Inputs are passed to Python without explicit validation or visible error reporting.
+- Remote image requests do not set a timeout or check the HTTP response status.
+- Each remote image download overwrites the existing `picData.webp` or `picData.gif`.
+- The application is configured specifically for Microsoft Edge and uses a native OpenCV window for previews.
