@@ -71,22 +71,6 @@ The browser interface calls the exposed Python function `buildQRcode()` through 
 
 The image is then passed to `myqr.run()` with color output enabled and the QR version fixed at `20`. The generated file uses the name entered in the interface. Static output is displayed with OpenCV, while animated GIF output is opened with its default Windows app.
 
-## Repository structure
-
-```text
-MediaQR/
-├── gui/
-│   ├── css/
-│   │   └── style.css
-│   ├── images/
-│   │   └── logo.svg
-│   ├── js/
-│   │   └── func.js
-│   └── index.html
-├── build.py
-└── requirements.txt
-```
-
 ## Known limitations
 
 - Inputs are passed to Python without explicit validation or visible error reporting.
